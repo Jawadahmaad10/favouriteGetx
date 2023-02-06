@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:getx_list/favourite_controller.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -8,9 +10,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<String> fruitList = ['Orange', 'Apple', 'Mangoes', 'Banana'];
+  FavouriteController controller = Get.put((FavouriteController()));
 
-  List<String> tempFruitList = []; //temporary fruitlist
+  // List<String> fruitList = ['Orange', 'Apple', 'Mangoes', 'Banana'];
+
+  // List<String> tempFruitList = []; //temporary fruitlist
 
   @override
   void initState() {
@@ -25,37 +29,38 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Getx Tutorials'),
       ),
       body: ListView.builder(
-        itemCount: fruitList.length,
+        itemCount: controller.fruitList.length,
         itemBuilder: (context, index) {
           return Card(
             child: ListTile(
               // adding this to tempfruit
               onTap: () {
-                if (tempFruitList.contains(
-                  fruitList[index]
+                if (controller.tempFruitList.contains(
+                  controller.fruitList[index]
                       .toString(), //if it contains favourite then remove otherwise dont remove else
                 )) {
-                  tempFruitList.remove(
-                    fruitList[index].toString(),
+                  controller.removeFromFavourite(
+                    controller.fruitList[index].toString(),
                   );
                 } else {
-                  tempFruitList.add(
-                    fruitList[index].toString(),
+                  controller.addToFavourite(
+                    controller.fruitList[index].toString(),
                   );
                 }
-
-                setState(() {});
               },
               title: Text(
-                fruitList[index].toString(),
+                controller.fruitList[index].toString(),
               ),
-              trailing: Icon(
-                Icons.favorite,
-                color: tempFruitList.contains(
-                  fruitList[index].toString(),
-                )
-                    ? Colors.red
-                    : Colors.white,
+              trailing: Obx(
+                () => Icon(
+                  //obx used here
+                  Icons.favorite,
+                  color: controller.tempFruitList.contains(
+                    controller.fruitList[index].toString(),
+                  )
+                      ? Colors.red
+                      : Colors.white,
+                ),
               ),
             ),
           );
